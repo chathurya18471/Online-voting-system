@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Voting System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Ambient Background SaaS Gradient Orbs -->
+    <div class="ambient-background" aria-hidden="true">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- Sticky Glassmorphism Header / Navigation Bar -->
+    <header class="header" id="main-header">
+        <div class="container navbar">
+            <!-- Brand Logo -->
+            <div class="nav-brand" onclick="showSection('home')">
+                <div class="brand-icon-wrapper">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <path d="m9 15 2 2 4-4"></path>
+                    </svg>
+                </div>
+                <div>
+                    <span class="brand-title">Online Voting System</span>
+                    <span class="brand-badge">Online Voting</span>
+                </div>
+            </div>
+
+            <!-- Center Navigation Links -->
+            <nav class="nav-center" id="nav-center">
+                <ul class="nav-links-list">
+                    <li><button class="nav-link-btn active" id="nav-home" onclick="showSection('home')">Home</button></li>
+                    <li><button class="nav-link-btn" id="nav-how" onclick="scrollToHowItWorks()">How It Works</button></li>
+                    <li><button class="nav-link-btn" id="nav-dashboard" onclick="showSection('dashboard')">Candidates</button></li>
+                    <li><button class="nav-link-btn" id="nav-results" onclick="showSection('results')">Results</button></li>
+                    <li><button class="nav-link-btn" id="nav-commissioner" onclick="showCommissionerPortal()">Commissioner Login</button></li>
+                </ul>
+            </nav>
+
+            <!-- Right Actions: Theme Toggle & Authentication -->
+            <div class="nav-right-actions">
+                <!-- Dark Mode Toggle Button -->
+                <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle Dark Mode" title="Toggle Theme">
+                    <svg id="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+
+                <!-- Logged-Out Actions -->
+                <div id="nav-guest-actions" style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-sm btn-outline" onclick="showSection('login')">Voter Login</button>
+                    <button class="btn btn-sm btn-primary" onclick="showCommissionerPortal()">Commissioner Login</button>
+                </div>
+
+                <!-- Logged-In User Actions -->
+                <div id="nav-user-actions" style="display: none; align-items: center; gap: 0.65rem;">
+                    <div class="user-session-chip">
+                        <div class="user-avatar-circle" id="user-avatar-initial">U</div>
+                        <span class="user-name-text" id="nav-user-display-name">Citizen</span>
+                    </div>
+                    <button class="btn btn-sm btn-outline" onclick="logout()" title="Sign out of ballot session">
+                        Logout
+                    </button>
+                </div>
+
+                <!-- Mobile Hamburger Toggle -->
+                <button class="mobile-nav-toggle" id="mobile-nav-toggle" onclick="toggleMobileMenu()" aria-label="Open navigation menu">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area with SPA Sections -->
+    <main class="main-content">
+
+        <!-- ==================== 1. LANDING PAGE SECTION ==================== -->
+        <section id="home-section" class="app-section active-section">
+            <!-- SaaS Hero -->
+            <div class="hero-section">
+                <div class="container hero-grid">
+                    <!-- Hero Left Content -->
+                    <div class="hero-left-content">
+                        <div class="hero-badge-pill">
+                            <span class="hero-badge-dot"></span>
+                            SIMPLE &bull; CONVENIENT &bull; EFFICIENT
+                        </div>
+                        <h1 class="hero-headline">
+                            <span>Your Vote.</span>
+                            <span>Your Voice.</span>
+                            <span class="text-gradient">Your Choice.</span>
+                        </h1>
+                        <p class="hero-lead-text">
+                            A simple digital platform for conducting and managing elections. 
+                            Voters can view candidates and cast their vote, while election commissioners can monitor candidates and vote counts.
+                        </p>
+                        <div class="hero-cta-group">
+                            <button class="btn btn-primary btn-lg" onclick="handleStartVotingClick()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="m9 12 2 2 4-4"></path>
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                </svg>
+                                Start Voting
+                            </button>
+                            <button class="btn btn-outline btn-lg" onclick="scrollToHowItWorks()">
+                                Learn More
+                            </button>
+                            <button class="btn btn-ghost btn-lg" onclick="showSection('results')">
+                                View Live Results 📊
+                            </button>
+                        </div>
+                        <div class="hero-trust-badges">
+                            <div class="trust-item">
+                                <span class="trust-icon">✓</span> 100% Encrypted Simulation
+                            </div>
+                            <div class="trust-item">
+                                <span class="trust-icon">✓</span> Verified Voter ID
+                            </div>
+                            <div class="trust-item">
+                                <span class="trust-icon">✓</span> Secret Ballot Protection
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hero Right: Modern Dashboard Illustration (Pure HTML/CSS) -->
+                    <div class="hero-illustration-wrapper">
+                        <div class="illustration-card-container">
+                            <!-- Floating status badges -->
+                            <div class="float-tag-top">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                <span>Ballot Sealed & Recorded</span>
+                            </div>
+
+                            <div class="float-tag-bottom">
+                                <span style="width: 8px; height: 8px; border-radius: 50%; background: #2563eb; display: inline-block;"></span>
+                                <span>Live Turnout: <strong>72.0%</strong></span>
+                            </div>
+
+                            <!-- Mock Digital Voter ID Card -->
+                            <div class="mock-voter-card">
+                                <div class="mock-voter-header">
+                                    <div class="mock-chip"></div>
+                                    <span class="mock-verified-badge">VERIFIED VOTER</span>
+                                </div>
+                                <div class="mock-voter-body">
+                                    <div class="mock-voter-thumb">P</div>
+                                    <div>
+                                        <div class="mock-voter-name">Prem Kumar</div>
+                                        <div class="mock-voter-id">VOTER ID: V101 &bull; 2026</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mock Mini Candidate Selection Box -->
+                            <div class="mock-candidates-box">
+                                <div class="mock-cand-row active">
+                                    <div class="mock-cand-left">
+                                        <div class="mock-radio"><div class="mock-radio-dot"></div></div>
+                                        <div>
+                                            <div class="mock-cand-name">Dr. Sarah Jenkins</div>
+                                            <small style="font-size: 0.72rem; color: var(--text-muted);">Progressive Alliance</small>
+                                        </div>
+                                    </div>
+                                    <span class="mock-cand-votes">34.2%</span>
+                                </div>
+
+                                <div class="mock-cand-row">
+                                    <div class="mock-cand-left">
+                                        <div class="mock-radio"></div>
+                                        <div>
+                                            <div class="mock-cand-name">Michael Chang</div>
+                                            <small style="font-size: 0.72rem; color: var(--text-muted);">National Development</small>
+                                        </div>
+                                    </div>
+                                    <span class="mock-cand-votes" style="color: var(--text-muted);">22.8%</span>
+                                </div>
+
+                                <div class="mock-cand-row">
+                                    <div class="mock-cand-left">
+                                        <div class="mock-radio"></div>
+                                        <div>
+                                            <div class="mock-cand-name">Elena Rostova</div>
+                                            <small style="font-size: 0.72rem; color: var(--text-muted);">Democratic Green</small>
+                                        </div>
+                                    </div>
+                                    <span class="mock-cand-votes" style="color: var(--text-muted);">43.0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How It Works Section -->
+            <div class="how-it-works-section" id="how-it-works">
+                <div class="container">
+                    <div class="text-center">
+                        <span class="section-eyebrow">Seamless Process</span>
+                        <h2 class="section-title">How Digital Voting Works</h2>
+                        <p class="section-subtitle">
+                            Our streamlined four-step workflow guarantees authenticated access, complete privacy, and instant vote tallying.
+                        </p>
+                    </div>
+
+                    <div class="steps-grid">
+                        <div class="step-card">
+                            <span class="step-number">01</span>
+                            <div class="step-icon-box">
+                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="8.5" cy="7" r="4"></circle>
+                                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                                </svg>
+                            </div>
+                            <h3 class="step-title">Voter Registration</h3>
+                            <p class="step-text">Register with your unique Voter ID, verified email, and age validation (18+) to be added to the official voter registry.</p>
+                        </div>
+
+                        <div class="step-card">
+                            <span class="step-number">02</span>
+                            <div class="step-icon-box">
+                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                            </div>
+                            <h3 class="step-title">Secure Login</h3>
+                            <p class="step-text">Authenticate using your credentials. The system checks your eligibility status and ballot token in real time.</p>
+                        </div>
+
+                        <div class="step-card">
+                            <span class="step-number">03</span>
+                            <div class="step-icon-box">
+                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                                </svg>
+                            </div>
+                            <h3 class="step-title">Select Candidate</h3>
+                            <p class="step-text">Explore candidate manifestos, symbols, and agendas. Pick exactly one candidate to represent you.</p>
+                        </div>
+
+                        <div class="step-card">
+                            <span class="step-number">04</span>
+                            <div class="step-icon-box">
+                                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="m9 12 2 2 4-4"></path>
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                </svg>
+                            </div>
+                            <h3 class="step-title">Secret Confirmation</h3>
+                            <p class="step-text">Review your choice in a confirmation modal. Once cast, your choice is anonymized and locked against double voting.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 2. VOTER REGISTRATION SECTION ==================== -->
+        <section id="register-section" class="app-section">
+            <div class="container auth-wrapper">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <div class="auth-header-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="8.5" cy="7" r="4"></circle>
+                                <line x1="20" y1="8" x2="20" y2="14"></line>
+                                <line x1="23" y1="11" x2="17" y2="11"></line>
+                            </svg>
+                        </div>
+                        <h2 class="auth-title">Voter Registration</h2>
+                        <p class="auth-subtitle">Create your digital voter credentials to cast your ballot.</p>
+                    </div>
+
+                    <!-- Alert Banner -->
+                    <div id="reg-message" class="form-banner-alert" style="display: none;"></div>
+
+                    <form id="registration-form" onsubmit="registerVoter(event)" novalidate>
+                        <!-- Voter ID -->
+                        <div class="form-group">
+                            <label for="reg-voter-id" class="form-label">Voter ID <span style="color: var(--danger);">*</span></label>
+                            <div class="input-with-icon">
+                                <span class="input-icon-left">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                                        <line x1="7" y1="8" x2="17" y2="8"></line>
+                                        <line x1="7" y1="12" x2="11" y2="12"></line>
+                                    </svg>
+                                </span>
+                                <input type="text" id="reg-voter-id" class="input-control" placeholder="e.g. V105" autocomplete="off" required>
+                            </div>
+                            <div class="field-error-text" id="reg-voter-id-error"></div>
+                        </div>
+
+                        <!-- Full Name -->
+                        <div class="form-group">
+                            <label for="reg-name" class="form-label">Full Legal Name <span style="color: var(--danger);">*</span></label>
+                            <div class="input-with-icon">
+                                <span class="input-icon-left">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                </span>
+                                <input type="text" id="reg-name" class="input-control" placeholder="e.g. Prem Kumar" autocomplete="name" required>
+                            </div>
+                            <div class="field-error-text" id="reg-name-error"></div>
+                        </div>
+
+                        <!-- Age & Email Row -->
+                        <div style="display: grid; grid-template-columns: 1fr 1.6fr; gap: 0.85rem;">
+                            <div class="form-group">
+                                <label for="reg-age" class="form-label">Age <span style="color: var(--danger);">*</span></label>
+                                <div class="input-with-icon">
+                                    <span class="input-icon-left">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"></circle>
+                                            <polyline points="12 6 12 12 16 14"></polyline>
+                                        </svg>
+                                    </span>
+                                    <input type="number" id="reg-age" class="input-control" placeholder="18+" min="1" max="120" required>
+                                </div>
+                                <div class="field-error-text" id="reg-age-error"></div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="reg-email" class="form-label">Email <span style="color: var(--danger);">*</span></label>
+                                <div class="input-with-icon">
+                                    <span class="input-icon-left">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                            <polyline points="22,6 12,13 2,6"></polyline>
+                                        </svg>
+                                    </span>
+                                    <input type="email" id="reg-email" class="input-control" placeholder="user@domain.com" required>
+                                </div>
+                                <div class="field-error-text" id="reg-email-error"></div>
+                            </div>
+                        </div>
+
+                        <!-- Password & Confirm Password with Visibility Toggle -->
+                        <div class="form-group">
+                            <label for="reg-password" class="form-label">Password <span style="color: var(--danger);">*</span></label>
+                            <div class="input-with-icon">
+                                <span class="input-icon-left">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                    </svg>
+                                </span>
+                                <input type="password" id="reg-password" class="input-control" placeholder="Create secure password" required>
+                                <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('reg-password', this)" aria-label="Toggle password visibility">
+                                    👁️
+                                </button>
+                            </div>
+                            <div class="field-error-text" id="reg-password-error"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reg-confirm-password" class="form-label">Confirm Password <span style="color: var(--danger);">*</span></label>
+                            <div class="input-with-icon">
+                                <span class="input-icon-left">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                    </svg>
+                                </span>
+                                <input type="password" id="reg-confirm-password" class="input-control" placeholder="Confirm password" required>
+                                <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('reg-confirm-password', this)" aria-label="Toggle password visibility">
+                                    👁️
+                                </button>
+                            </div>
+                            <div class="field-error-text" id="reg-confirm-password-error"></div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 1rem;">
+                            Register as Voter
+                        </button>
+                    </form>
+
+                    <div class="auth-bottom-link">
+                        Already have a Voter ID?
+                        <button class="auth-action-link" onclick="showSection('login')">Log in here</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 3. VOTER LOGIN SECTION ==================== -->
+        <section id="login-section" class="app-section">
+            <div class="container auth-wrapper">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <div class="auth-header-icon" style="background: rgba(16, 185, 129, 0.12); color: var(--success);">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </div>
+                        <h2 class="auth-title">Welcome Back</h2>
+                        <p class="auth-subtitle">Login to access your official ballot and cast your vote.</p>
+                    </div>
+
+                    <!-- Alert Banner -->
+                    <div id="login-message" class="form-banner-alert" style="display: none;"></div>
+
+                    <form id="login-form" onsubmit="loginVoter(event)" novalidate>
+                        <!-- Voter ID Input -->
+                        <div class="form-group">
+                            <label for="login-voter-id" class="form-label">Voter ID <span style="color: var(--danger);">*</span></label>
+                            <div class="input-with-icon">
+                                <span class="input-icon-left">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                                        <line x1="7" y1="8" x2="17" y2="8"></line>
+                                        <line x1="7" y1="12" x2="11" y2="12"></line>
+                                    </svg>
+                                </span>
+                                <input type="text" id="login-voter-id" class="input-control" placeholder="Enter Voter ID (e.g. V101)" autocomplete="username" required>
+                            </div>
+                            <div class="field-error-text" id="login-voter-id-error"></div>
+                        </div>
+
+                        <!-- Password Input with Toggle -->
+                        <div class="form-group">
+                            <label for="login-password" class="form-label">Password <span style="color: var(--danger);">*</span></label>
+                            <div class="input-with-icon">
+                                <span class="input-icon-left">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                    </svg>
+                                </span>
+                                <input type="password" id="login-password" class="input-control" placeholder="Enter password" autocomplete="current-password" required>
+                                <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('login-password', this)" aria-label="Toggle password visibility">
+                                    👁️
+                                </button>
+                            </div>
+                            <div class="field-error-text" id="login-password-error"></div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top: 1rem;">
+                            Log In to Vote ➔
+                        </button>
+                    </form>
+
+                    <!-- Quick Demo Credentials Box -->
+                    <div class="demo-accounts-pill-box">
+                        <div class="demo-pills-header">
+                            <span>QUICK TEST ACCOUNTS (1-CLICK FILL)</span>
+                        </div>
+                        <div class="demo-buttons-grid">
+                            <button type="button" class="demo-account-chip" onclick="quickFillCredentials('V101', 'pass123')">
+                                <span class="chip-name">Alice Smith</span>
+                                <span class="chip-badge chip-unvoted">Not Voted Yet</span>
+                                <small style="display:block; font-size: 0.72rem; color: var(--text-muted);">V101 &bull; pass123</small>
+                            </button>
+                            <button type="button" class="demo-account-chip" onclick="quickFillCredentials('V102', 'pass123')">
+                                <span class="chip-name">Bob Miller</span>
+                                <span class="chip-badge chip-voted">Already Voted</span>
+                                <small style="display:block; font-size: 0.72rem; color: var(--text-muted);">V102 &bull; pass123</small>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="auth-bottom-link">
+                        Don't have an account?
+                        <button class="auth-action-link" onclick="showSection('register')">Register here</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 4. ELECTION COMMISSIONER LOGIN ==================== -->
+        <section id="commissioner-section" class="app-section">
+            <div class="container auth-wrapper">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <div class="auth-header-icon" style="background: rgba(37, 99, 235, 0.12); color: var(--primary);">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 3l8 4v5c0 5-3.5 8-8 9-4.5-1-8-4-8-9V7l8-4z"></path>
+                                <path d="m9 12 2 2 4-4"></path>
+                            </svg>
+                        </div>
+                        <h2 class="auth-title">Election Commissioner Login</h2>
+                        <p class="auth-subtitle">Login to monitor candidates, vote counts, and election information.</p>
+                    </div>
+                    <div id="commissioner-message" class="form-banner-alert" style="display:none;"></div>
+                    <form id="commissioner-login-form" onsubmit="loginCommissioner(event)" novalidate>
+                        <div class="form-group">
+                            <label for="commissioner-id" class="form-label">Commissioner ID <span style="color:var(--danger);">*</span></label>
+                            <input type="text" id="commissioner-id" class="input-control" placeholder="Enter Commissioner ID" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="commissioner-password" class="form-label">Password <span style="color:var(--danger);">*</span></label>
+                            <input type="password" id="commissioner-password" class="input-control" placeholder="Enter password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg" style="margin-top:1rem;">Login to Commissioner Dashboard ➔</button>
+                    </form>
+                    <div class="demo-accounts-pill-box">
+                        <div class="demo-pills-header"><span>DEMO COMMISSIONER ACCOUNT</span></div>
+                        <small style="display:block;color:var(--text-muted);padding:0.5rem 0;">Commissioner ID: EC001 &nbsp;•&nbsp; Password: admin123</small>
+                    </div>
+                    <div class="auth-bottom-link">
+                        Are you a voter?
+                        <button class="auth-action-link" onclick="showSection('login')">Go to Voter Login</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 4. VOTING DASHBOARD SECTION ==================== -->
+        <section id="dashboard-section" class="app-section">
+            <div class="container" style="padding-top: 2.5rem; padding-bottom: 4rem;">
+                <!-- Modern SaaS Greeting Header -->
+                <div class="dashboard-view-header">
+                    <div class="voter-profile-meta">
+                        <div class="voter-avatar-badge" id="dash-avatar-circle">P</div>
+                        <div>
+                            <span class="voter-greeting">Authenticated Voter</span>
+                            <h2 class="voter-display-name">Welcome back, <span id="dashboard-voter-name">Prem</span></h2>
+                            <div class="voter-details-row">
+                                <span>Voter ID: <strong id="dashboard-voter-id">V101</strong></span>
+                                <span>&bull;</span>
+                                <span>Age: <strong id="dashboard-voter-age">24</strong></span>
+                                <span>&bull;</span>
+                                <span>Email: <strong id="dashboard-voter-email">prem@example.com</strong></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="election-session-details">
+                        <div class="election-name-banner">Student Council Election 2026</div>
+                        <div class="election-pill-row">
+                            <span class="status-pill open">
+                                <span style="width: 7px; height: 7px; border-radius: 50%; background: var(--success); display: inline-block;"></span>
+                                Voting Open
+                            </span>
+                            <span class="status-pill deadline">
+                                ⏱ Deadline: 23 September 2026
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4 Top Modern Statistics Cards -->
+                <div class="dashboard-stats-grid">
+                    <div class="modern-stat-card">
+                        <div class="stat-icon-wrapper blue">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="stat-label-title">Election</div>
+                            <div class="stat-big-number" style="font-size: 1.35rem; color: var(--success);">ACTIVE</div>
+                        </div>
+                    </div>
+
+                    <div class="modern-stat-card">
+                        <div class="stat-icon-wrapper purple">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="stat-label-title">Candidates</div>
+                            <div class="stat-big-number" id="dash-candidate-count">05</div>
+                        </div>
+                    </div>
+
+                    <div class="modern-stat-card">
+                        <div class="stat-icon-wrapper cyan">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                                <path d="m9 12 2 2 4-4"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="stat-label-title">Your Status</div>
+                            <div class="stat-big-number" id="dash-voter-status-val" style="font-size: 1.25rem;">NOT VOTED</div>
+                        </div>
+                    </div>
+
+                    <div class="modern-stat-card">
+                        <div class="stat-icon-wrapper emerald">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="20" x2="18" y2="10"></line>
+                                <line x1="12" y1="20" x2="12" y2="4"></line>
+                                <line x1="6" y1="20" x2="6" y2="14"></line>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="stat-label-title">Turnout</div>
+                            <div class="stat-big-number" id="dash-turnout-pct">70.0%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ALREADY VOTED BANNER (Shown when voter has voted) -->
+                <div id="already-voted-banner" class="already-voted-card" style="display: none;">
+                    <div class="already-voted-icon">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="already-voted-title">You have already voted in this election.</h3>
+                        <p class="already-voted-text">
+                            Your ballot has been securely submitted and counted in the aggregate tally. 
+                            Under democratic regulations, each voter is entitled strictly to one vote. Your choice is protected under ballot secrecy.
+                        </p>
+                        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                            <button class="btn btn-sm btn-primary" onclick="showSection('results')">
+                                View Election Results ➔
+                            </button>
+                            <button class="btn btn-sm btn-outline" onclick="showSection('admin')">
+                                Demo Admin Panel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Candidate Selection Grid Area -->
+                <div id="candidates-area">
+                    <div style="margin-bottom: 2rem;">
+                        <span class="section-eyebrow">Official Ballot</span>
+                        <h3 class="section-title">Select Your Candidate</h3>
+                        <p class="section-subtitle" style="margin: 0;">
+                            Select one candidate from the roster below. You can review and confirm your selection before final submission.
+                        </p>
+                    </div>
+
+                    <!-- Dynamic 5 Candidates Grid -->
+                    <div class="candidates-grid" id="candidates-grid">
+                        <!-- Rendered by script.js -->
+                    </div>
+
+                    <!-- Sticky Bottom Action Bar -->
+                    <div class="sticky-vote-action-bar" id="sticky-vote-action-bar">
+                        <div class="container vote-action-row">
+                            <div class="selection-summary">
+                                <span class="selection-lead">Selected:</span>
+                                <span class="selection-val" id="bar-selected-name">No candidate selected</span>
+                                <span class="selection-party-pill" id="bar-selected-party" style="display: none;"></span>
+                            </div>
+                            <div style="display: flex; gap: 0.75rem;">
+                                <button class="btn btn-ghost" id="bar-clear-btn" onclick="selectCandidate(null)" disabled>
+                                    Clear
+                                </button>
+                                <button class="btn btn-primary btn-lg" id="bar-confirm-btn" onclick="confirmVote()" disabled>
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="m9 12 2 2 4-4"></path>
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                    </svg>
+                                    Confirm & Submit Vote
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 5. SUCCESS SCREEN SECTION ==================== -->
+        <section id="success-section" class="app-section">
+            <div class="container success-screen-wrapper">
+                <div class="success-card">
+                    <!-- Animated Checkmark -->
+                    <div class="checkmark-circle-wrapper">
+                        <svg class="animated-check-svg" viewBox="0 0 24 24">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </div>
+
+                    <h2 class="success-headline">Vote Successfully Submitted</h2>
+                    <p class="success-subtext">
+                        Thank you for participating in the election. Your franchise has been officially counted into the aggregate tally.
+                    </p>
+
+                    <div class="success-secrecy-pill">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="m9 12 2 2 4-4"></path>
+                            <circle cx="12" cy="12" r="10"></circle>
+                        </svg>
+                        <span>Status: Your vote has been recorded securely.</span>
+                    </div>
+
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 2rem;">
+                        (In accordance with ballot secrecy laws, your specific candidate choice is kept strictly confidential and cleared from view.)
+                    </p>
+
+                    <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn btn-primary btn-lg" onclick="showSection('dashboard')">
+                            Return to Dashboard
+                        </button>
+                        <button class="btn btn-outline btn-lg" onclick="showSection('results')">
+                            View Live Results 📊
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 6. RESULTS SECTION ==================== -->
+        <section id="results-section" class="app-section">
+            <div class="container results-container">
+                <div class="text-center">
+                    <span class="section-eyebrow">Real-Time Tabulation</span>
+                    <h2 class="section-title">Official Election Results</h2>
+                    <p class="section-subtitle">
+                        Live analytics dynamically computed from in-memory session votes.
+                    </p>
+                </div>
+
+                <!-- Top KPI Cards -->
+                <div class="dashboard-stats-grid" style="margin-top: 2.5rem;">
+                    <div class="modern-stat-card">
+                        <div class="stat-icon-wrapper blue">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="stat-label-title">Total Voters</div>
+                            <div class="stat-big-number" id="res-total-voters">50</div>
+                        </div>
+                    </div>
+
+                    <div class="modern-stat-card">
+                        <div class="stat-icon-wrapper emerald">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m9 12 2 2 4-4"></path>
+                                <circle cx="12" cy="12" r="10"></circle>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="stat-label-title">Total Votes</div>
+                            <div class="stat-big-number" id="res-total-votes">35</div>
+                        </div>
+                    </div>
+
+                    <div class="modern-stat-card">
+                        <div class="stat-icon-wrapper purple">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="stat-label-title">Not Voted</div>
+                            <div class="stat-big-number" id="res-not-voted">15</div>
+                        </div>
+                    </div>
+
+                    <div class="modern-stat-card">
+                        <div class="stat-icon-wrapper cyan">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="20" x2="18" y2="10"></line>
+                                <line x1="12" y1="20" x2="12" y2="4"></line>
+                                <line x1="6" y1="20" x2="6" y2="14"></line>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="stat-label-title">Voting Percentage</div>
+                            <div class="stat-big-number" id="res-turnout-pct">70.0%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Candidate Results Cards Breakdown -->
+                <div class="results-table-card">
+                    <div class="results-card-top">
+                        <div>
+                            <h3 style="font-size: 1.35rem; font-weight: 800; color: var(--text-primary);">Candidate Performance</h3>
+                            <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.2rem;">Live percentage of total valid ballots cast</p>
+                        </div>
+                        <button class="btn btn-sm btn-outline" onclick="renderResults(); showMessage('Results refreshed!', 'info');">
+                            Refresh Data
+                        </button>
+                    </div>
+
+                    <div id="candidate-results-container">
+                        <!-- Populated by script.js -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== 7. ELECTION COMMISSIONER DASHBOARD (SIDEBAR LAYOUT) ==================== -->
+        <section id="admin-section" class="app-section">
+            <div class="container" style="padding-top:1rem;">
+                <div class="form-banner-alert alert-info" style="display:flex; margin-bottom:1rem;">
+                    <strong>Election Commissioner:</strong>&nbsp; You are viewing the election monitoring dashboard. Candidates and vote counts are shown below.
+                </div>
+            <div class="container" style="padding-top: 2rem;">
+                <div class="admin-layout-wrapper">
+                    <!-- Left Sidebar (Desktop Fixed / Collapsible) -->
+                    <aside class="admin-sidebar">
+                        <div class="admin-brand-header">
+                            <div class="brand-icon-wrapper" style="width: 32px; height: 32px;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                </svg>
+                            </div>
+                            <span>VoteSphere Admin</span>
+                        </div>
+
+                        <ul class="admin-menu-list">
+                            <li>
+                                <button class="admin-nav-item active" onclick="switchAdminTab('dashboard', this)">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                                    Dashboard
+                                </button>
+                            </li>
+                            <li>
+                                <button class="admin-nav-item" onclick="switchAdminTab('voters', this)">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>
+                                    Voters Roster
+                                </button>
+                            </li>
+                            <li>
+                                <button class="admin-nav-item" onclick="switchAdminTab('candidates', this)">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                                    Candidates
+                                </button>
+                            </li>
+                            <li>
+                                <button class="admin-nav-item" onclick="showSection('results')">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                                    Results View
+                                </button>
+                            </li>
+                            <li>
+                                <button class="admin-nav-item" onclick="showMessage('Student Council Election 2026 is currently ACTIVE.', 'info')">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    Election Rules
+                                </button>
+                            </li>
+                            <li>
+                                <button class="admin-nav-item" onclick="showMessage('Admin settings simulated in educational mode.', 'info')">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                                    Settings
+                                </button>
+                            </li>
+                        </ul>
+
+                        <div class="admin-sidebar-footer">
+                            <button class="btn btn-sm btn-outline-danger btn-block" onclick="resetDemoData()">
+                                Reset Demo Data
+                            </button>
+                        </div>
+                    </aside>
+
+                    <!-- Main Stage Content Area -->
+                    <main class="admin-main-stage">
+                        <!-- Prominent Demo Badge -->
+                        <div class="demo-notice-banner">
+                            <div class="demo-notice-text">
+                                <strong>DEMO ADMIN PANEL &bull; EDUCATIONAL SIMULATION</strong>
+                                <p>Simulates administrative election analytics and voter auditing directly within browser memory.</p>
+                            </div>
+                            <span class="badge" style="background: rgba(245, 158, 11, 0.2); color: var(--warning); font-weight: 800;">
+                                DEMO MODE
+                            </span>
+                        </div>
+
+                        <!-- Top Admin Overview Metrics -->
+                        <div class="dashboard-stats-grid" style="margin-bottom: 2rem;">
+                            <div class="modern-stat-card">
+                                <div>
+                                    <div class="stat-label-title">Total Voters</div>
+                                    <div class="stat-big-number" id="admin-kpi-voters">50</div>
+                                </div>
+                            </div>
+                            <div class="modern-stat-card">
+                                <div>
+                                    <div class="stat-label-title">Total Candidates</div>
+                                    <div class="stat-big-number" id="admin-kpi-candidates">05</div>
+                                </div>
+                            </div>
+                            <div class="modern-stat-card">
+                                <div>
+                                    <div class="stat-label-title">Total Votes</div>
+                                    <div class="stat-big-number" id="admin-kpi-votes">35</div>
+                                </div>
+                            </div>
+                            <div class="modern-stat-card">
+                                <div>
+                                    <div class="stat-label-title">Voting Percentage</div>
+                                    <div class="stat-big-number" id="admin-kpi-turnout">70.0%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Candidate Performance Chart Card (Pure CSS/HTML) -->
+                        <div class="admin-chart-box">
+                            <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">Voting Statistics &bull; Candidate Performance</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.2rem;">Custom pure HTML/CSS responsive bar chart</p>
+
+                            <div class="pure-css-bar-chart" id="admin-bar-chart-content">
+                                <!-- Populated dynamically by script.js -->
+                            </div>
+                        </div>
+
+                        <!-- Recent Activity Simulated Audit Feed -->
+                        <div class="activity-feed-card">
+                            <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">Recent Activity Audit Feed</h3>
+                            <ul class="activity-list" id="admin-activity-list">
+                                <li class="activity-item">
+                                    <span class="activity-dot"></span>
+                                    <span>Voter <strong>V102 (Bob Miller)</strong> submitted ballot token.</span>
+                                    <span class="activity-time">5 mins ago</span>
+                                </li>
+                                <li class="activity-item">
+                                    <span class="activity-dot"></span>
+                                    <span>Voter <strong>V103 (Carlos Rivera)</strong> submitted ballot token.</span>
+                                    <span class="activity-time">12 mins ago</span>
+                                </li>
+                                <li class="activity-item">
+                                    <span class="activity-dot"></span>
+                                    <span>New voter <strong>V101 (Alice Smith)</strong> credentials verified.</span>
+                                    <span class="activity-time">18 mins ago</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Live Registered Voters Roster Table -->
+                        <div class="admin-table-card">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+                                <div>
+                                    <h3 style="font-size: 1.25rem; font-weight: 800; color: var(--text-primary);">Voter Registry (Current Session)</h3>
+                                    <p style="font-size: 0.85rem; color: var(--text-muted);">Real-time memory state of all registered voters</p>
+                                </div>
+                                <input type="text" class="table-filter-input" id="voter-search-input" placeholder="Search by name or Voter ID..." oninput="filterAdminVoters()">
+                            </div>
+
+                            <div style="overflow-x: auto;">
+                                <table class="saas-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Voter ID</th>
+                                            <th>Full Name</th>
+                                            <th>Age</th>
+                                            <th>Email</th>
+                                            <th>Ballot Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-voters-tbody">
+                                        <!-- Rendered by script.js -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div></section>
+
+    </main>
+
+    <!-- ==================== VOTE CONFIRMATION MODAL ==================== -->
+    <div id="confirmation-modal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-window" role="dialog" aria-modal="true" aria-labelledby="modal-head">
+            <div class="modal-header-bar">
+                <h3 class="modal-header-title" id="modal-head">Confirm Your Vote</h3>
+                <button class="modal-dismiss-btn" onclick="closeConfirmationModal()" aria-label="Close modal">&times;</button>
+            </div>
+
+            <div class="modal-body-content">
+                <p class="modal-question">Are you sure you want to vote for:</p>
+
+                <div class="modal-candidate-highlight">
+                    <img id="modal-cand-image" src="assets/candidate1.jpg" alt="Candidate" class="modal-thumb">
+                    <div>
+                        <div class="modal-cand-title" id="modal-cand-name">Candidate Name</div>
+                        <div class="modal-cand-org" id="modal-cand-party">Party Name</div>
+                        <div style="font-size: 0.8rem; font-weight: 700; color: var(--primary); margin-top: 0.2rem;" id="modal-cand-symbol">Symbol</div>
+                    </div>
+                </div>
+
+                <div class="modal-undone-warning">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <span>This action cannot be undone. Your choice is protected under ballot secrecy.</span>
+                </div>
+            </div>
+
+            <div class="modal-footer-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeConfirmationModal()">Cancel</button>
+                <button type="button" class="btn btn-success" id="btn-confirm-final" onclick="submitVote()">
+                    Confirm Vote
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODERN SAAS FOOTER ==================== -->
+    <footer class="saas-footer">
+        <div class="container">
+            <div class="footer-top-grid">
+                <div>
+                    <div class="footer-brand-title">VoteSphere</div>
+                    <p class="footer-desc">
+                        A modern, frontend-only democratic voting application engineered strictly with vanilla HTML5, CSS3, and JavaScript.
+                    </p>
+                    <div class="footer-disclaimer-badge">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        <span>Frontend-only educational demonstration. Not suitable for real elections.</span>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="footer-col-title">Navigation</div>
+                    <ul class="footer-links-list">
+                        <li><button class="footer-link-btn" onclick="showSection('home')">Home</button></li>
+                        <li><button class="footer-link-btn" onclick="scrollToHowItWorks()">How It Works</button></li>
+                        <li><button class="footer-link-btn" onclick="showSection('dashboard')">Candidates</button></li>
+                        <li><button class="footer-link-btn" onclick="showSection('results')">Results</button></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="footer-col-title">Access Portal</div>
+                    <ul class="footer-links-list">
+                        <li><button class="footer-link-btn" onclick="showSection('login')">Voter Login</button></li>
+                        <li><button class="footer-link-btn" onclick="showSection('register')">Register New Voter</button></li>
+                        <li><button class="footer-link-btn" onclick="showSection('admin')">Demo Admin Dashboard</button></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="footer-col-title">System Specs</div>
+                    <ul class="footer-links-list" style="color: #64748b; font-size: 0.82rem;">
+                        <li>Zero Backend Servers</li>
+                        <li>Zero Database / Pure JS State</li>
+                        <li>Runs 100% Offline in Browser</li>
+                        <li>Dual Light / Dark Mode</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom-bar">
+                <div>&copy; 2026 VoteSphere &bull; Advanced Frontend Engineering</div>
+                <div style="display: flex; gap: 1rem;">
+                    <span>Terms &bull; Educational Demo</span>
+                    <span>Ballot Secrecy Standard</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Core -->
+    <script src="script.js"></script>
+</body>
+</html>
